@@ -34,8 +34,7 @@ def main():
     updater.start_webhook(listen="0.0.0.0", port=os.environ.get("PORT", 443),
                           url_path="https://zam-isbot.herokuapp.com/" + TOKEN)
 
-
-## updater.idle()
+    updater.idle()
 
 if __name__ == '__main__':
     main()
