@@ -1,13 +1,15 @@
-from telegram.ext import Updater
-from telegram.ext import CommandHandler, MessageHandler, Filters
+from telegram.ext.updater import Updater
+from telegram.ext.commandhandler import CommandHandler
+from telegram.ext.messagehandler import  MessageHandler
+from telegram.ext.filters import Filters
 import os
 
 TOKEN = os.environ.get("TELEGRAM_ID")
 
 
 def start(update, context):
-    yourname = update.message.chat.first_name
-    msg = "Hi " + yourname + "! Welcome."
+    name = update.message.chat.first_name
+    msg = "Hi " + name + "! Welcome."
     context.bot.send_message(update.message.chat.id, msg)
 
 
@@ -35,6 +37,7 @@ def main():
                           url_path="https://zam-isbot.herokuapp.com/" + TOKEN)
 
     updater.idle()
+
 
 if __name__ == '__main__':
     main()
