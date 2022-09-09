@@ -25,19 +25,19 @@ def error(update, context):
     context.bot.send_message(update.message.chat.id, " Error !!")
 
 
-def main():
-    updater = Updater(token=TOKEN)
-    dp = updater.dispatcher
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("details", details))
-    dp.add_handler(MessageHandler(Filters.text, mimic))
+# def main():
+updater = Updater(token=TOKEN)
+dp = updater.dispatcher
+dp.add_handler(CommandHandler("start", start))
+dp.add_handler(CommandHandler("details", details))
+dp.add_handler(MessageHandler(Filters.text, mimic))
 
-    dp.add_error_handler(error)
-    updater.start_webhook(listen="0.0.0.0", port=os.environ.get("PORT", 443),
+dp.add_error_handler(error)
+#    updater.start_webhook(listen="0.0.0.0", port=os.environ.get("PORT", 443),
                           url_path="https://zam-isbot.herokuapp.com/" + TOKEN)
+updater._start_polling()
+updater.idle()
 
-    updater.idle()
 
-
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#    main()
