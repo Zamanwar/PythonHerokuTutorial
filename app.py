@@ -1,43 +1,44 @@
-from telegram.ext.updater import Updater
-from telegram.ext.commandhandler import CommandHandler
-from telegram.ext.messagehandler import MessageHandler
-from telegram.ext.filters import Filters
-import os
+import requests
 
-TOKEN = os.environ.get("TELEGRAM_ID")
+base_url = "https://api.telegram.org/bot5214403693:AAE7RwwToN9EvXU_mkGKoKzge59w1xX5INo/"
 
 
-def start(update, context):
-    name = update.message.chat.first_name
-    msg = "Hi " + name + "! Welcome."
-    context.bot.send_message(update.message.chat.id, msg)
+def read_msg(offset):
+    parameters = {
+        "offset": offset
+
+    }
+    resp = requests.get(base_url + "getUpdates", data=parameters)
+    data = resp.json()
+    print(data)
+
+    for result in data["result"]:
+        if "Hit" in result["message"]["text"]:
+            send_msg()
+        else:
+            new_msg()
+    if data["result"]:
+        return data["result"][-1]["update_id"] + 1
 
 
-def mimic(update, context):
-    context.bot.send_message(update.message.chat.id, update.message.txt)
+def send_msg():
+    parameters = {
+        "chat_id": "-756942555",
+        "text": "Why the bot is so lazy"
+    }
+    resp = requests.get(base_url + "sendMessage", data=parameters)
+    print(resp.text)
 
 
-def details(update, context):
-    context.bot.send_message(update.message.chat.id, update.message)
+def new_msg():
+    parameters = {
+        "chat_id": "-756942555",
+        "text": "Why the bot is so active"
+    }
+    resp = requests.get(base_url + "sendMessage", data=parameters)
+    print(resp.text)
 
 
-def error(update, context):
-    context.bot.send_message(update.message.chat.id, " Error !!")
+offset = 0
 
-
-def main():
-    updater = Updater(token=TOKEN)
-    dp = updater.dispatcher
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("details", details))
-    dp.add_handler(MessageHandler(Filters.text, mimic))
-
-    dp.add_error_handler(error)
-    updater.start_webhook(listen="0.0.0.0", port=os.environ.get("PORT", 443),
-                          url_path="https://zam-isbot.herokuapp.com/" + TOKEN)
-# updater.start_polling()
-    updater.idle()
-
-
-if __name__ == '__main__':
-    main()
+read_msg(offset)
